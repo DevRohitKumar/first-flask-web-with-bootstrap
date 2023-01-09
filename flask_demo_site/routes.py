@@ -7,7 +7,7 @@ def home():
     return render_template("home.html", title="Home")
 
 @app.route('/about')
-def anout():
+def about():
     return render_template("about.html", title="About")
 
 @app.route('/login')
@@ -17,3 +17,7 @@ def login():
 @app.route('/register')
 def register():
     return render_template("register.html", title="Register")
+
+@app.route('/account')
+def account():
+    return render_template("account.html", title="Account")
