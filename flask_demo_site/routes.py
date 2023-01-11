@@ -1,5 +1,6 @@
-from flask import render_template
+from flask import render_template, redirect, url_for
 from flask_demo_site import app
+from flask_demo_site.forms import RegisterForm, LoginForm
 
 @app.route('/')
 @app.route('/home')
@@ -10,13 +11,19 @@ def home():
 def about():
     return render_template("about.html", title="About")
 
-@app.route('/login')
+@app.route('/login', methods=['POST', 'GET'])
 def login():
-    return render_template("login.html", title="Login")
+    form = LoginForm()
+    if form.validate_on_submit():
+        return redirect(url_for('home'))
+    return render_template("login.html", title="Login", form=form)
 
-@app.route('/register')
+@app.route('/register', methods=['POST', 'GET'])
 def register():
-    return render_template("register.html", title="Register")
+    form = RegisterForm()
+    if form.validate_on_submit():
+        return redirect(url_for('login'))
+    return render_template("register.html", title="Register", form=form)
 
 @app.route('/account')
 def account():

@@ -1,5 +1,37 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Login</h1>
+<div class="container w-50 pt-lg-5">
+    <form method="POST" action="" enctype="multipart/form-data">
+        <!-- {{ form.csrf_token }} -->
+        {{ form.hidden_tag()}}
+        <fieldset>
+            <div class="form-group mb-3">
+                {{ form.email.label(class="form-control-label")}}
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control form-control-lg is-invalid", type="email")}}
+                    {% for error in form.email.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                    {% else %}
+                    {{ form.email(class="form-control form-control-lg", type="email")}}
+                {% endif %}
+            </div>
+            <div class="form-group mb-3">
+                {{ form.password.label(class="form-control-label")}}
+                {% if form.password.errors %}
+                    {{ form.password(class="form-control form-control-lg is-invalid", type="password")}}
+                    {% for error in form.password.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                    {% else %}
+                    {{ form.password(class="form-control form-control-lg", type="password")}}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class='btn btn-outline-primary btn-lg float-end', type="submit")}}
+        </div>
+    </form>
+</div>
 {% endblock content %}
