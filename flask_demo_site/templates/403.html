@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+        <div class="card text-center">
+                <div class="card-body">
+                        <h5 class="card-title">Error 403</h5>
+                        <p class="card-text">Forbidden</p>
+                        <a href="{{url_for('home')}}" >Back to homepage</a>
+                </div>
+        </div>
+</div>
+{{ error }}
+{% endblock %}
