@@ -14,7 +14,7 @@ class RegisterForm(FlaskForm):
                                     ])
     password = PasswordField(label='Password',
                              validators=[DataRequired(),
-                                         Length(min=6, max=32)
+                                         Length(min=6, max=40)
                                          ])
     confirm_password = PasswordField(label='Confirm Password',
                                      validators=[DataRequired(),
@@ -31,6 +31,6 @@ class LoginForm(FlaskForm):
                                     ])
     password = PasswordField(label='Password',
                              validators=[DataRequired(),
-                                         Length(min=6, max=32)
+                                         Length(min=6, max=40)
                                          ])
     submit = SubmitField(label='Login')
