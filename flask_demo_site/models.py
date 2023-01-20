@@ -1,5 +1,5 @@
-from flask_demo_site import mysql, app
-from datetime import datetime
+# from flask_demo_site import mysql, app
+# from datetime import datetime
 
 # class User(db.Model):
 #     __tablename__ = "users"

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container w-50 pt-lg-5">
+    <form class="my-3 " method="POST" action="" enctype="multipart/form-data">
+        {{ form.hidden_tag()}}
+        <fieldset>
+            <div class="form-group mb-3 col-md-12 col-sm-12 col-xs-12">
+                {{ form.email.label(class="form-control-label")}}
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control form-control-lg is-invalid", type="email") }}
+                    {% for error in form.email.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                {% else %}
+                    {{ form.email(class="form-control form-control-lg", type="email", placeholer="email") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group mb-3">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                {{ form.submit(class='btn btn-primary btn-lg col-lg-12 col-sm-12 col-xs-12', type="submit")}}
+            </div>    
+            <div class="col-6 col-md-12 col-sm-12 my-3 text-center d-flex">
+                <p class="float-sm-start">Not a member? <a href="{{ url_for('register')}}">Register</a></p>
+            </div>
+        
+        </div>     
+           
+    </form>
+</div>
+{% endblock %}
