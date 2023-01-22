@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_mysqldb import MySQL
 from config import config
-
+from flask_login import LoginManager
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = config['SECRET_KEY']
@@ -12,6 +12,6 @@ app.config['MYSQL_DB'] = config['DATABASE']
 # app.config['SALT'] = config['SALT']
  
 mysql = MySQL(app)
-
+login_manager = LoginManager(app)
 
 from flask_demo_site import routes

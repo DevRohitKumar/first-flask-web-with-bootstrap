@@ -19,7 +19,10 @@ class RegisterForm(FlaskForm):
                                     ])
     password = PasswordField(label='Password',
                              validators=[DataRequired(),
-                                         Length(min=6, max=40)
+                                         Length(min=6, max=52),
+                                         Regexp("^[a-zA-Z0-9]+$"),
+                                        #  Regexp("/^[\x21-\x7E]+$/"),
+                                         #  Regexp("/^[\w.~`!@#$%^&*()-+=<>?,\/\[\]\{\}\|]+$/")
                                          ])
     confirm_password = PasswordField(label='Confirm Password',
                                      validators=[DataRequired(),

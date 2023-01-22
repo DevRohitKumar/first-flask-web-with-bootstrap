@@ -6,11 +6,7 @@ def generate_aplhanum_str(len=5):
             You can increase this upper limit with helper.""")
     elif len > 0:
         
-        gas = ''.join(random.choices(string.ascii_uppercase + string.digits, k=len))
-        print(gas)
+        gas = ''.join(random.choices(string.ascii_lowercase + string.digits, k=len))
         return gas    
     else:
         print("Length required to generate alpha-numeric string")
-
-
-generate_aplhanum_str(6)
