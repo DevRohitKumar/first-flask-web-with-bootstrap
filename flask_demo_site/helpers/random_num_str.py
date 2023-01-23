@@ -4,8 +4,8 @@ def generate_num_str(len):
     start = "1"
     end = "9"
     num_str = ""
-    if len > 10:
-        print("""Max length set for now is 10. Which will generate numeric string of 10 digits.
+    if len > 20:
+        print("""Max length set for now is 20. Which will generate numeric string of 10 digits.
             You can increase this upper limit with helper""")
     elif len > 0:
         for i in range(len-1):

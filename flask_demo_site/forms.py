@@ -38,8 +38,8 @@ class LoginForm(FlaskForm):
                                     ])
     password = PasswordField(label='Password',
                              validators=[DataRequired()])
-    rememberMe = BooleanField(label="Remember Me",
-                              default=True)
+    rememberMe = BooleanField(label="Keep me logged in",
+                              default=False)
     submit = SubmitField(label='Login')
     
 class VerifyEmailForm(FlaskForm):

@@ -34,32 +34,31 @@
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('about')}}">About</a>
               </li>
+              {% if session['loggedin'] %}
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('account')}}">Account</a>
               </li>
+              {% endif %}
             </ul>
             <ul class="navbar-nav justify-content-end">
               <li class="nav-item">
-              {% if session['loggedin'] %}
-                <a class=" nav-link btn btn-lg " role="button" href="{{ url_for('logout') }}">
+              {% if session['loggedin' ] %}
+                <a class=" nav-link btn btn-lg btn-outline-secondary px-5 " role="button" href="{{ url_for('logout') }}">
                   Logout
                 </a>
               {% else %}
-                <a class=" nav-link btn btn-lg " role="button" href="{{ url_for('login') }}">
+                <a class=" nav-link btn btn-lg btn-outline-success px-5 " role="button" href="{{ url_for('login') }}">
                   Login
                 </a>
               {% endif %}
               </li>
-              <!-- <li class="nav-item mx-1">
-                  <a class="nav-link active btn btn-success" href="{{ url_for('register')}}" role="button">Register</a>
-              </li> -->
             </ul>
           </div>
         </div>
     </nav>
 </head>
 <body>
-  <div class="container w-75">
+  <div class="container w-50">
     {% with messages=get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
