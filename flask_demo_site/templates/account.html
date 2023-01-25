@@ -3,16 +3,36 @@
 {% block content %}
 <div class="container-xl px-4 mt-4">
     {% include 'account_nav.html' %}
+    
     <hr class="mt-0 mb-4">
-    <div class="row">
+    <div class="tab-area">
                 
-        <div id="general-content" class="tab-content"></div>
-        <div id="security-content" class="tab-content"></div>
-        <div id="notifications-content" class="tab-content"></div>
+        <div id="general-content" class="tab-content row"></div>
+        <div id="security-content" class="tab-content row"></div>
+        <div id="notifications-content" class="tab-content row"></div>
+        <div id="billing-content" class="tab-content"></div>
         
     </div>
     <script>
         $(document).ready(function() {
+            var firstTabId = $('.account-tab').first().attr('id');
+            $(firstTabId).addClass("active");     
+            $.ajax({
+                url: '/tab',
+                data: {tabId: firstTabId},
+                type: 'GET',
+                success: function(response) {     
+                    $('.tab-content').hide();
+                    $('#' + firstTabId + '-content').show();
+                    $('#' + firstTabId + '-content').html(response);
+                            
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });   
+
+
             $('.account-tab').click(function(e) {
                 e.preventDefault()
                 $('.account-tab').removeClass('active');
@@ -22,7 +42,7 @@
                     url: '/tab',
                     data: {tabId: tabId},
                     type: 'GET',
-                    success: function(response) {                        
+                    success: function(response) {
                         $('.tab-content').hide();
                         $('#' + tabId + '-content').show();
                         $('#' + tabId + '-content').html(response);

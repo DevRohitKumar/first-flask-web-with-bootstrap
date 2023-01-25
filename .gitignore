@@ -1,3 +1,7 @@
 venv/
 test.py
 config.py
+test.html
+node_modules
+package.json
+package-lock.json

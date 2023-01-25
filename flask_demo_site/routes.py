@@ -50,18 +50,6 @@ def account():
 def tab():
     tab = request.args.get('tabId')    
     return render_template('account_'+tab+'.html')
-    # if tabId == 'tab1-button':
-    #     return render_template('tab1.html')
-    # elif tabId == 'tab2-button':
-    #     return render_template('tab2.html')
-
-# @app.route('/security-settings')
-# def security():
-#     return render_template("account_security.html", title= "Account Security")
-
-# @app.route('/account-security')
-# def security():
-#     return render_template("account_security.html", title= "Account Security")
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
