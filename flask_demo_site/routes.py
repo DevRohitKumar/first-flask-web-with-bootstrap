@@ -7,20 +7,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from config import config
 from datetime import timedelta
 
-
-@app.route('/')
-@app.route('/home')
-def home():
-    return render_template("home.html", title="Home")
-
-@app.route('/about')
-def about():
-    return render_template("about.html", title="About")
-
-@app.route('/account')
-def account():
-    return render_template("account.html", title="Account")
-
 def get_password_by_email(email):
     conn_cursor = mysql.connection.cursor()
     conn_cursor.execute("""SELECT password FROM users 
@@ -41,6 +27,41 @@ def set_user_session(userid, username, user_first_name, user_last_name):
     session['username'] = username
     session['fname'] = user_first_name
     session['lname'] = user_last_name
+
+@app.route('/')
+@app.route('/home')
+def home():
+    return render_template("home.html", title="Home")
+
+@app.route('/about')
+def about():
+    return render_template("about.html", title="About")
+
+@app.route('/account', methods=['GET', 'POST'])
+def account():
+    return render_template("account.html", title="Account")
+
+# @app.route('/account/<string:tab>', methods=['GET', 'POST'])
+# def account_tab(tab):
+#     if tab == 'general':
+#         return render_template('account.html'), tab
+
+@app.route('/tab')
+def tab():
+    tab = request.args.get('tabId')    
+    return render_template('account_'+tab+'.html')
+    # if tabId == 'tab1-button':
+    #     return render_template('tab1.html')
+    # elif tabId == 'tab2-button':
+    #     return render_template('tab2.html')
+
+# @app.route('/security-settings')
+# def security():
+#     return render_template("account_security.html", title= "Account Security")
+
+# @app.route('/account-security')
+# def security():
+#     return render_template("account_security.html", title= "Account Security")
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -92,7 +113,8 @@ def login():
             set_user_session(user[0], user[1], user[2], user[3])
                         
             flash(f'Logged in succesfully', category='success')
-            return redirect('home')
+            # return redirect('home')            
+            return redirect( '/account/general')
         else:
             flash(f'Login failed', category='danger') 
     return render_template("login.html", title="Login", form=form)
@@ -166,6 +188,18 @@ def username_check():
     finally:
         cursor.close()
         conn.close()
+
+# @app.route('/users/<str:username>/profile')
+# def user_profile(username):
+#     return render_template('user_profile.html', username=username)
+
+@app.route('/terms')
+def terms_and_conditions():
+    return render_template("terms_and_conditions.html", title= "Terms and Conditions")
+
+@app.route('/privacy')
+def privacy():
+    return render_template("privacy_policy.html", title= "Privacy Policy")
 
 # Error handling pages
 @app.errorhandler(404)
