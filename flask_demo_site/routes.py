@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, flash, request, session, jsonify
-from flask_demo_site import app, mysql
+from flask_demo_site import app, mysql, serializer
 from flask_demo_site.forms import RegisterForm, LoginForm, VerifyEmailForm, ResetPasswordForm
 from flask_demo_site.helpers.random_alphanum_str import generate_aplhanum_str
 from flask_demo_site.helpers.random_num_str import generate_num_str
@@ -28,21 +28,35 @@ def set_user_session(userid, username, user_first_name, user_last_name):
     session['fname'] = user_first_name
     session['lname'] = user_last_name
 
+def send_email(mailing_route, email):
+    
+    if mailing_route == "/register":
+            
+        token = serializer.dumps(email, salt="registration-confirmation")
+
+        # Send the token to the user's email address
+        msg = Message("Confirm Your Email Address", recipients=[user_email])
+        link = url_for('confirm_email',token=token,_external=True)
+        msg.body = f"Please click the link to confirm your email: {link}"
+        mail.send(msg)
+
+###### Protected routes ######
 @app.route('/')
 @app.route('/home')
 def home():
     return render_template("home.html", title="Home")
 
-@app.route('/about')
-def about():
-    return render_template("about.html", title="About")
-
 @app.route('/account', methods=['GET', 'POST'])
 def account():
     return render_template("account.html", title="Account")
 
-# @app.route('/account/<string:tab>', methods=['GET', 'POST'])
-# def account_tab(tab):
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    return render_template("contact.html", title="Contact")
+
+###### Posts routes ######
+# @app.route('/post/<string:tab>', methods=['GET', 'POST'])
+# def post(tab):
 #     if tab == 'general':
 #         return render_template('account.html'), tab
 
@@ -51,6 +65,8 @@ def tab():
     tab = request.args.get('tabId')    
     return render_template('account_'+tab+'.html')
 
+
+###### Auth routes ######
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     form = RegisterForm()
@@ -74,13 +90,15 @@ def register():
                 VALUES (%s, %s,%s,%s,%s,%s)""", (userid, username, fname, lname, email, hashed_password))
             mysql.connection.commit()
             conn_cursor.close()
+            mailing_route = request.path
+            send_email(mailing_route, email)
+            # newuser = get_user_by_email(email)
             
-            newuser = get_user_by_email(email)
-            if newuser:
-                set_user_session(newuser[0], newuser[1], newuser[2], newuser[3])  
-            
-                flash(f'Account created succesfully', category='success')
-                return redirect(url_for('account'))
+            # if newuser:
+                # set_user_session(newuser[0], newuser[1], newuser[2], newuser[3])  
+               
+            flash(f'Verification email has been send to {email}', category='success')
+            return redirect(url_for('login'))
     return render_template("register.html", title="Register", form=form)
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -101,8 +119,7 @@ def login():
             set_user_session(user[0], user[1], user[2], user[3])
                         
             flash(f'Logged in succesfully', category='success')
-            # return redirect('home')            
-            return redirect( '/account/general')
+            return redirect('home')
         else:
             flash(f'Login failed', category='danger') 
     return render_template("login.html", title="Login", form=form)
@@ -113,12 +130,9 @@ def verify_email():
     if form.validate_on_submit() and request.method == 'POST':
     
         email = request.form.get('email')
-        
-        conn_cursor = mysql.connection.cursor()
-        conn_cursor.execute("SELECT * FROM users WHERE email_address LIKE '{}'".format(email))
-        user = conn_cursor.fetchall()
+        user = get_user_by_email(email)
         if user:
-            flash(f'Please check your email for password reset link.', category='info')
+            flash(f'Please check your email for password reset request.', category='info')
         else:
             flash(f'Found no such account. ', category='danger')
             
@@ -129,7 +143,6 @@ def reset_password():
     form = ResetPasswordForm()
     if form.validate_on_submit() and request.method == 'POST':
     
-        email = request.form.get('email')
         password = request.form.get('password')
         
         conn_cursor = mysql.connection.cursor()
@@ -140,7 +153,7 @@ def reset_password():
             print(user[0][0])
         else:
             flash(f'Login failed', category='danger') 
-    return render_template("login.html", title="Login", form=form)
+    return render_template("reset_password.html", title="Reset password", form=form)
 
 @app.route('/logout')
 def logout():
@@ -177,10 +190,14 @@ def username_check():
         cursor.close()
         conn.close()
 
+
+###### User routes ######
 # @app.route('/users/<str:username>/profile')
 # def user_profile(username):
 #     return render_template('user_profile.html', username=username)
 
+
+###### General routes ######
 @app.route('/terms')
 def terms_and_conditions():
     return render_template("terms_and_conditions.html", title= "Terms and Conditions")
@@ -189,7 +206,12 @@ def terms_and_conditions():
 def privacy():
     return render_template("privacy_policy.html", title= "Privacy Policy")
 
-# Error handling pages
+@app.route('/about')
+def about():
+    return render_template("about.html", title="About")
+
+
+###### Error handling routes ######
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html", title="Page not found"), 404

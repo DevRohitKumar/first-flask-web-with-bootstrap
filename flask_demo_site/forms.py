@@ -52,7 +52,8 @@ class VerifyEmailForm(FlaskForm):
 class ResetPasswordForm(FlaskForm):
     password = PasswordField(label='New Password',
                              validators=[DataRequired(),
-                                         Length(min=6, max=40)
+                                         Length(min=6, max=40),
+                                         Regexp("^[a-zA-Z0-9]+$"),
                                          ])
     confirm_password = PasswordField(label='Confirm New Password',
                                      validators=[DataRequired(),
