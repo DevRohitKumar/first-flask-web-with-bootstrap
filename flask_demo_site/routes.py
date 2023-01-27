@@ -35,11 +35,12 @@ def send_email(mailing_route, email):
             
         token = serializer.dumps(email, salt="registration-confirmation")
         # Send the token to the user's email address
-        msg = Message("Please confirm your email address",
-                      sender= 'demo_admin@demisite.com',
+        msg = Message("Demosite registration confirmation",
+                      sender= 'demo_admin@demosite.com',
                       recipients=[email])
-        link = url_for('registeration_verification',token=token,_external=True)
-        msg.body = f"Please click the link to confirm your email: {link}"
+        link = url_for('registration_verification',token=token,_external=True)
+        # msg.body = f"Please click the link to confirm your email: {link}"
+        msg.html = render_template('confirm_registration_email_template.html', link= link)
         mail.send(msg)
 
 ###### Protected routes ######
@@ -100,7 +101,7 @@ def register():
                 # set_user_session(newuser[0], newuser[1], newuser[2], newuser[3])  
                
             flash(f'Verification email sent to {email}', category='success')
-            return redirect(url_for('login'))
+            return redirect(url_for('register_verify_pending')), email
     return render_template("register.html", title="Register", form=form)
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -193,20 +194,26 @@ def username_check():
         conn.close()
 
 @app.route("/register/verification/<token>")
-def registeration_verification(token):
+def registration_verification(token):
     try:
+        print("Token is : " + token)
         # Verify the token and get the user's email address
         email = serializer.loads(token, salt="registration-confirmation", max_age=600)
-
+        print("Email is : " + email)
         # Confirm the user's email address
         conn_cursor.execute("""UPDATE users
                                 SET email_verified = 1
                                 WHERE email = {};""".format(email))
-        return redirect("/login")
+        return redirect(url_for('account'))
     except SignatureExpired:
         return "Token expired"
     except BadSignature:
         return "Invalid token"
+
+@app.route('/verifaction/pending')
+def register_verify_pending():
+    email = request.args.get("email")
+    return render_template('register_verify_pending.html'), email
 
 ###### User routes ######
 # @app.route('/users/<str:username>/profile')

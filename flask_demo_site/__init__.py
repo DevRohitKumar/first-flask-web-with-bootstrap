@@ -24,6 +24,8 @@ app.config['MAIL_USERNAME'] = config['MAIL_USERNAME']
 app.config['MAIL_PASSWORD'] = config['MAIL_PASSWORD']
 
 
+
+
 mysql = MySQL(app)
 mail = Mail(app)
 
