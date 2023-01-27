@@ -1,11 +1,12 @@
 from flask import render_template, redirect, url_for, flash, request, session, jsonify
-from flask_demo_site import app, mysql, serializer
+from flask_demo_site import app, mysql, serializer, mail
 from flask_demo_site.forms import RegisterForm, LoginForm, VerifyEmailForm, ResetPasswordForm
 from flask_demo_site.helpers.random_alphanum_str import generate_aplhanum_str
 from flask_demo_site.helpers.random_num_str import generate_num_str
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import config
 from datetime import timedelta
+from flask_mail import Message
 
 def get_password_by_email(email):
     conn_cursor = mysql.connection.cursor()
@@ -33,10 +34,11 @@ def send_email(mailing_route, email):
     if mailing_route == "/register":
             
         token = serializer.dumps(email, salt="registration-confirmation")
-
         # Send the token to the user's email address
-        msg = Message("Confirm Your Email Address", recipients=[user_email])
-        link = url_for('confirm_email',token=token,_external=True)
+        msg = Message("Please confirm your email address",
+                      sender= 'demo_admin@demisite.com',
+                      recipients=[email])
+        link = url_for('registeration_verification',token=token,_external=True)
         msg.body = f"Please click the link to confirm your email: {link}"
         mail.send(msg)
 
@@ -97,7 +99,7 @@ def register():
             # if newuser:
                 # set_user_session(newuser[0], newuser[1], newuser[2], newuser[3])  
                
-            flash(f'Verification email has been send to {email}', category='success')
+            flash(f'Verification email sent to {email}', category='success')
             return redirect(url_for('login'))
     return render_template("register.html", title="Register", form=form)
 
@@ -190,6 +192,21 @@ def username_check():
         cursor.close()
         conn.close()
 
+@app.route("/register/verification/<token>")
+def registeration_verification(token):
+    try:
+        # Verify the token and get the user's email address
+        email = serializer.loads(token, salt="registration-confirmation", max_age=600)
+
+        # Confirm the user's email address
+        conn_cursor.execute("""UPDATE users
+                                SET email_verified = 1
+                                WHERE email = {};""".format(email))
+        return redirect("/login")
+    except SignatureExpired:
+        return "Token expired"
+    except BadSignature:
+        return "Invalid token"
 
 ###### User routes ######
 # @app.route('/users/<str:username>/profile')
@@ -227,3 +244,8 @@ def does_not_exist(e):
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template("500.html", title="Internal server error")
+
+
+@app.route('/testingroute')
+def testingroute():
+    return render_template("test.html", title="Testing")

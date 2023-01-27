@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_mysqldb import MySQL
-from flask_mail import Mail, Message
+from flask_mail import Mail
 from itsdangerous import URLSafeTimedSerializer
 from config import config
 
