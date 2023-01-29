@@ -36,7 +36,8 @@ def send_email(mailing_route, email):
         msg = Message("Demosite registration confirmation",
                       sender= 'demo_admin@demosite.com',
                       recipients=[email])
-        link = url_for('registration_verification', token=token, fname = fname,_external=True)
+        
+        link = url_for('registration_verification', token=token, _external=True)
         msg.html = render_template('confirm_registration_email_template.html', link= link)
         mail.send(msg)
 
@@ -90,18 +91,20 @@ def register():
                 VALUES (%s, %s,%s,%s,%s,%s)""", (userid, username, fname, lname, email, hashed_password))
             mysql.connection.commit()
             conn_cursor.close()
+                                    
             mailing_route = request.path
             send_email(mailing_route, email)
                
             flash(f'Verification email sent to {email}', category='success')
-            session['new_user'] = email
+            session['new_user_email'] = email
+            
             return redirect(url_for('register_verify_pending')), 301
     return render_template("register.html", title="Register", form=form)
 
 
 @app.route('/verifaction/pending')
 def register_verify_pending():
-    email = session.get('new_user')
+    email = session.get('new_user_email')
     return render_template('register_verify_pending.html', email = email)
 
 @app.route("/register/verification/<token>")
