@@ -7,6 +7,7 @@ from config import config
 from datetime import timedelta
 from flask_mail import Message
 from itsdangerous import SignatureExpired, BadSignature
+from functools import wraps
 
 def get_password_by_email(email):
     conn_cursor = mysql.connection.cursor()
@@ -29,8 +30,7 @@ def set_user_session(userid, username, user_first_name, user_last_name):
     session['fname'] = user_first_name
     session['lname'] = user_last_name
 
-def send_email(mailing_route, email): 
-    
+def send_email(mailing_route, email):    
     if mailing_route == "/register":
         token = serializer.dumps(email, salt="registration-confirmation")
         msg = Message("Demosite registration confirmation",
@@ -41,13 +41,25 @@ def send_email(mailing_route, email):
         msg.html = render_template('confirm_registration_email_template.html', link= link)
         mail.send(msg)
 
+# Decorator to check if user is logged in
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'loggedin' not in session or not session['loggedin']:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 ###### Protected routes ######
 @app.route('/')
 @app.route('/home')
+@login_required
 def home():
     return render_template("home.html", title="Home")
 
 @app.route('/account', methods=['GET', 'POST'])
+@login_required
 def account():
     return render_template("account.html", title="Account")
 
@@ -100,7 +112,6 @@ def register():
             
             return redirect(url_for('register_verify_pending')), 301
     return render_template("register.html", title="Register", form=form)
-
 
 @app.route('/verifaction/pending')
 def register_verify_pending():
@@ -184,6 +195,7 @@ def reset_password():
     return render_template("reset_password.html", title="Reset password", form=form)
 
 @app.route('/logout')
+@login_required
 def logout():
     session.clear()
     return redirect('login')

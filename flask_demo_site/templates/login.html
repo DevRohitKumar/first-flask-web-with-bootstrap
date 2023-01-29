@@ -32,12 +32,13 @@
             </div>
         </fieldset>
         <div class="form-group mb-3 row">
-            <div class="my-1 col-lg-4 col-xl-6 col-sm-12 col-xs-12 ">
+            <div class="my-1 col-lg-6 col-xl-6 col-sm-12 col-xs-12 my-2 ">
                 {{ form.rememberMe() }}
                 {{ form.rememberMe.label(class="col-xs-10") }}
             </div>
-            <div class="col-lg-8 col-xl-6 col-sm-12 col-xs-12">
-                {{ form.submit(class='btn btn-primary btn-lg float-sm-end col-lg-12 col-sm-12 col-xs-12', type="submit")}}
+            <div class="col-lg-6 col-xl-6 col-sm-12 col-xs-12">
+                <!-- {{ form.submit(class='btn btn-primary btn-lg float-sm-end col-lg-12 col-sm-12 form-control', type="submit")}} -->
+                {{ form.submit(class='btn btn-primary btn-lg float-lg-end col-md-4 col-lg-12 col-sm-12 form-control', type="submit")}}
             </div>     
         </div>     
         <div class="form-group mb-3 row ">
