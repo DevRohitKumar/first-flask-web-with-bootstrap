@@ -22,14 +22,13 @@ app.config['MAIL_USE_SSL'] = config['MAIL_USE_SSL']
 app.config['MAIL_USE_TLS'] = config['MAIL_USE_TLS']
 app.config['MAIL_USERNAME'] = config['MAIL_USERNAME']
 app.config['MAIL_PASSWORD'] = config['MAIL_PASSWORD']
-
+app.config['TOKEN_EXPIRATION_SECS'] = config['TOKEN_EXPIRATION_SECS']
+app.config['MAIL_SECRET_KEY'] = config['MAIL_SECRET_KEY']
 
 
 
 mysql = MySQL(app)
 mail = Mail(app)
-
-
 
 
 from flask_demo_site import routes

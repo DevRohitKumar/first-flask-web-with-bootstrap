@@ -9,4 +9,6 @@ def generate_aplhanum_str(len=5):
         gas = ''.join(random.choices(string.ascii_lowercase + string.digits, k=len))
         return gas    
     else:
-        print("Length required to generate alpha-numeric string")
+        print("Length required to generate alpha-numeric string")  
+        
+        
