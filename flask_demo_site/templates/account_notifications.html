@@ -13,7 +13,7 @@
                 <!-- Form Group (default email)-->
                 <div class="mb-3">
                     <label class="small mb-1" for="inputNotificationEmail">Default notification email</label>
-                    <input class="form-control" id="inputNotificationEmail" type="email" value="name@example.com" disabled="">
+                    <input class="form-control" id="inputNotificationEmail" type="email" value="{{ session.get('email') }}" disabled="">
                 </div>
                 <!-- Form Group (email updates checkboxes)-->
                 <div class="mb-0">
@@ -106,7 +106,7 @@
                     <label class="form-check-label" for="checkAutoProduct">Automatically subscribe to new product notifications</label>
                 </div>
                 <!-- Submit button-->
-                <button class="btn btn-danger-soft text-danger">Unsubscribe from all notifications</button>
+                <button class="btn btn-outline-danger">Unsubscribe from all notifications</button>
             </form>
         </div>
     </div>

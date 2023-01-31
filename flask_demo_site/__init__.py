@@ -3,7 +3,7 @@ from flask_mysqldb import MySQL
 from flask_mail import Mail
 from itsdangerous import URLSafeTimedSerializer
 from config import config
-
+# 
 
 app = Flask(__name__)
 

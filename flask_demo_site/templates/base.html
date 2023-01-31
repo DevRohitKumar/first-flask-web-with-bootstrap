@@ -9,9 +9,7 @@
     <!-- Favicon -->
     <!-- <link rel="shortcut icon" href="{{ url_for('static', filename='/favicons/favicon-16-96.png') }}"> -->
 
-    <!-- Fontawesome JavaScript -->
-    <!-- <script src="{{ url_for('static', filename='fontawesome_free/js/all.min.js') }}"></script> -->
-    <!-- Fontawesome CSS -->  
+   <!-- Fontawesome CSS -->  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
   
     <!-- Bootstrap CSS -->
@@ -19,6 +17,11 @@
     <!-- Custom CSS -->
     <link href="{{ url_for('static', filename= 'main.css') }} " rel="stylesheet">
     
+    {% if request.path == "/account" %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    {% endif %}
+
     {% if request.path == "/contact" %}
     <link href="{{ url_for('static', filename= 'contact.css') }} " rel="stylesheet">  
     {% endif %}
@@ -43,12 +46,13 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav  me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('about')}}">About</a>
-              </li>
               {% if session['loggedin'] %}
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('account' ) }}">Account</a>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('about')}}">About</a>
               </li>
               {% endif %}
             </ul>

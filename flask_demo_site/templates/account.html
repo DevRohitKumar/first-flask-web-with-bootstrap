@@ -15,6 +15,8 @@
     </div>
     <script>
         $(document).ready(function() {
+
+            // AJAX to load first tab section on page load
             var firstTabId = $('.account-tab').first().attr('id');
             $(firstTabId).addClass("active");     
             $.ajax({
@@ -24,15 +26,14 @@
                 success: function(response) {     
                     $('.tab-content').hide();
                     $('#' + firstTabId + '-content').show();
-                    $('#' + firstTabId + '-content').html(response);
-                            
+                    $('#' + firstTabId + '-content').html(response);                           
                 },
                 error: function(error) {
                     console.log(error);
                 }
             });   
 
-
+            // AJAX to load respective tab sections on tab clicks
             $('.account-tab').click(function(e) {
                 e.preventDefault()
                 $('.account-tab').removeClass('active');
@@ -53,69 +54,45 @@
                 });                
             });
 
+            // Sets date-picker with bithday field                
+            $('#inputBirthday').datepicker({
+                format: "dd/mm/yyyy",
+                todayHighlight: true,
+                autoclose: true,
+                clearBtn: false,
+                maxDate: new Date(),
+            });
+
         });
     </script>
-
-    <!-- <script>
-        var tabs = document.querySelectorAll('.tab');
-        var tabContent = document.querySelector('#tab-content');
-    
-        tabs.forEach(function (tab) {
-            tab.addEventListener('click', function (event) {
-                event.preventDefault();
-    
-                var tabName = event.target.dataset.tabName;
-                fetch(`{{ url_for('account', tab=tab) }}`)
-                    .then(function (response) {
-                        return response.text();
-                    })
-                    .then(function (html) {
-                        tabContent.innerHTML = html;
-                    });
-            });
-        });
-    </script> -->
-
 </div>
 <style type="text/css">
     .img-account-profile {
         height: 10rem;
-    }
-    
+    }    
     .rounded-circle {
         border-radius: 50% !important;
     }
-/* body{margin-top:20px;
-background-color:#f2f6fc;
-color:#69707a;
-}
+    body{
+        color:#575c62;
+    }
 
-.card {
-    box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
-}
-.card .card-header {
-    font-weight: 500;
-}
-.card-header:first-child {
-    border-radius: 0.35rem 0.35rem 0 0;
-}
-.card-header {
-    padding: 1rem 1.35rem;
-    margin-bottom: 0;
-    background-color: rgba(33, 40, 50, 0.03);
-    border-bottom: 1px solid rgba(33, 40, 50, 0.125);
-}
-.form-control, .dataTable-input {
+    .card {
+        box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
+    }
+    .card .card-header {
+        font-weight: 500;
+    }
+    .form-control, .dataTable-input {
     display: block;
     width: 100%;
     padding: 0.875rem 1.125rem;
     font-size: 0.875rem;
-    font-weight: 400;
+    font-weight: 600;
     line-height: 1;
-    color: #69707a;
     background-color: #fff;
     background-clip: padding-box;
-    border: 1px solid #c5ccd6;
+    border: 1px solid #b5bfcc;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -123,21 +100,5 @@ color:#69707a;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.nav-borders .nav-link.active {
-    color: #0061f2;
-    border-bottom-color: #0061f2;
-}
-.nav-borders .nav-link {
-    color: #69707a;
-    border-bottom-width: 0.125rem;
-    border-bottom-style: solid;
-    border-bottom-color: transparent;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    padding-left: 0;
-    padding-right: 0;
-    margin-left: 1rem;
-    margin-right: 1rem;
-} */
 </style>
 {% endblock content %}
