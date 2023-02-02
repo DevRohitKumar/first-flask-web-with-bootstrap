@@ -52,33 +52,29 @@
                         console.log(error);
                     }
                 });                
-            });
-           
-        });
+            });           
+        });        
         
-        
-
         // AJAX to check if username already exist 
         $(document).on('keyup', '#inputUsername', function(e) {
             // Prevents any entry of space
-            // var regex = new RegExp("^[a-zA-Z0-9]+$");
-            // var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-            // var key = e.keyCode
             if (e.which == 32) { 
                 var input_field_value = $(this).val();
                 input_field_value = input_field_value.replace(/\s/g, '');
                 $(this).val(input_field_value);
             }else {                
                 $("#loadingText").hide();
-                var entered_value = $(this).val();
-                var username_lower = entered_value.toLowerCase();
-                var username_value = username_lower.replace(/[^a-z0-9]/g, "");
+                var entered_value = $(this).val(); 
+                var username_lower = entered_value.toLowerCase(); // Converts any uppercase entry to lowercase
+                var username_value = username_lower.replace(/[^a-z0-9]/g, ""); // Removes any character other than alphanumeric characters
                 $(this).val(username_value);
 
-                if ( username_value == null || username_value == "") {
-                    
-                    $("#loadingSpinner").removeClass("d-none");
+                // Checks for null or empty value
+                if ( username_value == null || username_value == "") {                    
+                    $('#spinnerText').removeClass('d-none');
+                    $("#loadingSpinner").removeClass("d-none");                    
                     setTimeout(function() {
+                        $('#spinnerText').addClass("d-none");                            
                         $("#loadingSpinner").addClass("d-none");                            
                         $("#loadingText").show();
                         $("#loadingText").html("Username is required").css("color", "red");
@@ -92,17 +88,19 @@
                         dataType: "json",
                         cache: false,
                         success: function (resp) {
-                            if(resp.status == "success"){
-                                $("#loadingSpinner").removeClass("d-none");
+                            $('#spinnerText').removeClass("d-none");
+                            $("#loadingSpinner").removeClass("d-none");
+                            if(resp.status == "success"){                                
                                 setTimeout(function() {
+                                    $('#spinnerText').addClass("d-none");                            
                                     $("#loadingSpinner").addClass("d-none");                            
                                     $("#loadingText").show();
                                     $("#loadingText").html("Username is available").css("color", "green");                            
                                 }, 1000);                                
                             }
                             else if(resp.status == "failure"){
-                                $("#loadingSpinner").removeClass("d-none");
                                 setTimeout(function() {
+                                    $('#spinnerText').addClass("d-none");                            
                                     $("#loadingSpinner").addClass("d-none");                            
                                     $("#loadingText").show();
                                     $("#loadingText").html("Username is not available").css("color", "red");
@@ -110,6 +108,7 @@
                                 
                             }
                             else{                                
+                                $('#spinnerText').addClass("d-none");
                                 $("#loadingSpinner").addClass("d-none");
                             }
                         }
