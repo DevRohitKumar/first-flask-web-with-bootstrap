@@ -205,11 +205,11 @@ def logout():
     session.clear()
     return redirect('login')
 
+# Checks is username exists 
 @app.route('/username_check', methods=['POST'])
 def username_check():
     try:
-        username_received = request.form.get('username')
-        
+        username_received = request.form.get('username')        
         if username_received and request.method == 'POST' and username_received != session.get('username'):
             conn_cursor = mysql.connection.cursor()
             conn_cursor.execute("""SELECT * FROM users 
