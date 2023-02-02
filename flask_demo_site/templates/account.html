@@ -54,16 +54,103 @@
                 });                
             });
 
-            // Sets date-picker with bithday field                
-            $('#inputBirthday').datepicker({
-                format: "dd/mm/yyyy",
-                todayHighlight: true,
-                autoclose: true,
-                clearBtn: false,
-                maxDate: new Date(),
-            });
+            // AJAx to verify username if exist
+            // $("#generalUsername").on("input", function (e) {
+            //     var input_field_value = $(this).val();
+            //     console.log(input_field_value);
+            //     $("#msg").hide();
+            //     $("#loading").show();
+            //     if ( $("#username").val() == null || $("#username").val() == "") {
+            //         $("#msg").show();
+            //         $("#msg").html("Username is required").css("color", "red");
+            //     }else {
+            //         $.ajax({
+            //             type: "POST",
+            //             url: "/username_check",
+            //             data: "data",
+            //             dataType: "html",
+            //             cache: false,
+            //             success: function (response) {
+                            
+            //             }
+            //         });
+            //     }
 
+
+            // });
+
+           
         });
+        
+        // Removes any space from username
+        // $(document).on('keyup', '#generalUsername', function(e) {
+        //     if (e.which === 32) { 
+        //         var input_field_value = $(this).val();
+        //         input_field_value = input_field_value.replace(/\s/g, '');
+        //         $(this).val(input_field_value);
+        //     }    
+            
+        // });
+
+        // AJAX to check if username already exist 
+        $(document).on('keyup', '#generalUsername', function(e) {
+            if (e.which === 32) { 
+                var input_field_value = $(this).val();
+                input_field_value = input_field_value.replace(/\s/g, '');
+                $(this).val(input_field_value);
+            }
+            else {                
+                $("#loadingText").hide();
+                $("#loadingSpinner").removeClass("d-none");
+                var username_value = $(this).val();
+                
+                if ( username_value == null || username_value == "") {
+                    $("#loadingSpinner").addClass("d-none");
+                    $("#loadingText").show();
+                    $("#loadingText").html("Username is required").css("color", "red");                
+                }
+                else {
+                    $.ajax({
+                        type: "POST",
+                        url: "/username_check",
+                        data: { username : username_value },
+                        dataType: "json",
+                        cache: false,
+                        success: function (resp) {
+                            if(resp.status == "success"){
+                                $("#loadingSpinner").addClass("d-none");
+                                $("#loadingText").show();
+                                $("#loadingText").html("Username is available").css("color", "green");                            
+                            }
+                            else if(resp.status == "failure"){
+                                $("#loadingSpinner").addClass("d-none");
+                                $("#loadingText").show();
+                                $("#loadingText").html("Username is not available").css("color", "red");
+                            }
+                            else{                                
+                                $("#loadingSpinner").addClass("d-none");
+                            }
+                        }
+                    });
+                }
+
+            }
+            
+            
+
+        });         
+
+        $(document).on('focus', '#inputBirthday', function() {
+            $(this).datepicker(
+            //     {format: "dd/mm/yyyy",
+            //     todayHighlight: true,
+            //     autoclose: true,
+            //     clearBtn: false,
+            //     maxDate: new Date(),
+            // }
+            );
+        });
+
     </script>
 </div>
 <style type="text/css">

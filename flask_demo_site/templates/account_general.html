@@ -17,17 +17,21 @@
     <div class="card mb-4">
         <div class="card-header">General Details</div>
         <div class="card-body">
-            <form>                    
-                <div class="mb-3">
-                    <label class="small mb-1" for="inputUsername">Username (how your name will appear to other users on the site)</label>
-                    <input class="form-control" id="inputUsername" type="text" placeholder="Enter your username" value="{{ session.get('username') }}">
+            <form id="accountGeneral">                    
+                <div class="mb-3 ">
+                    <label class="small mb-1" for="generalUsername">Username (how your name will appear to other users on the site)</label>
+                    <input class="form-control" id="generalUsername" type="text" name="username" value="{{ session.get('username') }}" autocomplete="off">
                 </div>
-                <div class="input-group ">
+                <div id="loadingText" class="font-weight-bold" ></div>                  
+                <div class="spinner-border d-none" id="loadingSpinner" role="status">
+                    <span class="sr-only">Checking...</span>
+                </div>                 
+                 <!-- <div class="input-group" >
                     <p id="email-check-loader" class="col-md-3" >Checking username... </p>
                     <div class="input-group-append">
                         <span class="input-group-text spinner-border spinner-border-md" role="status" aria-hidden="true"></span>
                     </div>
-                </div>                  
+                </div>                   -->
                 <div class="row gx-3 mb-3">                    
                     <div class="col-md-6">
                         <label class="small mb-1" for="inputFirstName">First name</label>
@@ -62,8 +66,7 @@
                         <label class="small mb-1" for="inputBirthday">Birthday</label>
                         <input class="form-control" id="inputBirthday" type="date" name="birthday" value="" >
                     </div>
-                </div>
-                
+                </div>                
                 <button class="btn btn-primary" type="button">Save changes</button>
             </form>
         </div>

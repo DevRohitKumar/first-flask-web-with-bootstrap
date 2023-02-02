@@ -191,7 +191,7 @@ def reset_password():
         
         conn_cursor = mysql.connection.cursor()
         conn_cursor.execute("SELECT * FROM users WHERE email_address LIKE '{}' AND password LIKE '{}'".format(email, password))
-        user = conn_cursor.fetchall()
+        user = conn_cursor.fetchone()
         if user:
             session['user'] = user[0][0]
             print(user[0][0])
@@ -207,33 +207,23 @@ def logout():
 
 @app.route('/username_check', methods=['POST'])
 def username_check():
-    conn = None
-    cursor = None
     try:
-        username = request.form.get('username')
-        if username and request.method == 'POST':
+        username_received = request.form.get('username')
+        
+        if username_received and request.method == 'POST' and username_received != session.get('username'):
             conn_cursor = mysql.connection.cursor()
             conn_cursor.execute("""SELECT * FROM users 
-                                WHERE username = '{}'""".format(username))
+                                WHERE username = '{}'""".format(username_received))
             row = conn_cursor.fetchone() 
             
             if row:
-                response = jsonify('<span style="color: red">Username unavailable</span>')
-                response.status_code = 200
-                return response
+                return jsonify({'status': 'failure' }), 200
             else:
-                response = jsonify('<span style="color: red">Username available</span>')
-                response.status_code = 200
-                return response        
-        else:
-            response = jsonify('<span style="color: red">Username is required</span>')
-            response.status_code = 200
-            return response        
+                return jsonify({'status': 'success'}), 200
+        else: 
+            return jsonify({'status': 'same'}), 200
     except Exception as e:
         print(e)
-    finally:
-        cursor.close()
-        conn.close()
 
 ###### User routes ######
 # @app.route('/users/<str:username>/profile')
