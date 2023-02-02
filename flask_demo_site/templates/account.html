@@ -72,7 +72,6 @@
                 $("#loadingText").hide();
                 var entered_value = $(this).val();
                 var username_lower = entered_value.toLowerCase();
-                // $(this).val(username_value);    
                 var username_value = username_lower.replace(/[^a-z0-9]/g, "");
                 $(this).val(username_value);
 
@@ -80,10 +79,10 @@
                     
                     $("#loadingSpinner").removeClass("d-none");
                     setTimeout(function() {
-                        $("#loadingSpinner").addClass("d-none");
+                        $("#loadingSpinner").addClass("d-none");                            
+                        $("#loadingText").show();
+                        $("#loadingText").html("Username is required").css("color", "red");
                     }, 1000);
-                    $("#loadingText").show();
-                    $("#loadingText").html("Username is required").css("color", "red");                
                 }
                 else {
                     $.ajax({
@@ -94,14 +93,21 @@
                         cache: false,
                         success: function (resp) {
                             if(resp.status == "success"){
-                                $("#loadingSpinner").addClass("d-none");
-                                $("#loadingText").show();
-                                $("#loadingText").html("Username is available").css("color", "green");                            
+                                $("#loadingSpinner").removeClass("d-none");
+                                setTimeout(function() {
+                                    $("#loadingSpinner").addClass("d-none");                            
+                                    $("#loadingText").show();
+                                    $("#loadingText").html("Username is available").css("color", "green");                            
+                                }, 1000);                                
                             }
                             else if(resp.status == "failure"){
-                                $("#loadingSpinner").addClass("d-none");
-                                $("#loadingText").show();
-                                $("#loadingText").html("Username is not available").css("color", "red");
+                                $("#loadingSpinner").removeClass("d-none");
+                                setTimeout(function() {
+                                    $("#loadingSpinner").addClass("d-none");                            
+                                    $("#loadingText").show();
+                                    $("#loadingText").html("Username is not available").css("color", "red");
+                                }, 1000);
+                                
                             }
                             else{                                
                                 $("#loadingSpinner").addClass("d-none");
