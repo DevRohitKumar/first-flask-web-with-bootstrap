@@ -137,11 +137,28 @@
         // Modal verify and delete handling
         $(document).on("click", "#accountDeleteModalBtn" , function (e) {
             var email_otp_val = "";
-            $(".email-otp").each(function() {
+            var email_otp_len = 0;
+            $(".email-otp").each(function() {               
                 email_otp_val += $(this).val();
+                email_otp_len += 1;
             });
-            console.log(email_otp_val);
-            console.log(typeof email_otp_val);
+           
+            if (email_otp_len > email_otp_val.length){
+                $('.email-otp').css({
+                        "border-color": "red", 
+                    });
+                $("#confirmationModal").addClass("animate__animated animate__shakeX");
+                setTimeout(function() {
+                    $("#confirmationModal").removeClass("animate__animated animate__shakeX");                   
+                }, 2000);
+                setTimeout(function() {
+                    $('.email-otp').css({
+                        "border-color": "", 
+                    });
+                }, 15000);
+            }
+
+
         });
     </script>
 </div>
