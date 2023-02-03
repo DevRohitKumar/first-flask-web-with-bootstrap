@@ -226,7 +226,7 @@ def username_check():
     except Exception as e:
         print(e)
 
-# Generate and save OTP
+# Generate OTP, Save OTP to db and send to user email 
 @app.route('/save_otp', methods=['POST'])
 def save_otp_to_db():
     email_otp = generate_num_str(6)
@@ -242,13 +242,12 @@ def save_otp_to_db():
 
 @app.route('/otp_verification', methods=['POST'])
 def otp_verification():
-    email_otp = ""
-    for i in range(1, 7):
-        email_otp += str(request.form.get(f"emailOTP{i}"))
-        
+    received_email_otp = request.form.get("email_otp")
+    received_otp_user = request.form.get("user")
+    
     conn_cursor = mysql.connection.cursor()
-    conn_cursor.execute("""SELECT user_id, username, user_first_name, user_last_name 
-                        FROM emailotp WHERE email_address = '{}'""".format(email))
+    conn_cursor.execute("""SELECT otp_code
+                        FROM emailotp WHERE opt_user = '{}'""".format(received_otp_user))
     result = conn_cursor.fetchone()
     return result
 

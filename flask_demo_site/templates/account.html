@@ -129,9 +129,21 @@
             );
         });
 
-        // Shows confirmation modal
+        // Shows confirmation modal and generate OTPs
         $(document).on("click", "#deleteAccount", function () {
-            $("#confirmationModal").modal("show");            
+            $("#confirmationModal").modal("show");
+            var user =  session.get('user') 
+            // var userId = {{ session["user_id"]|tojson|safe }};
+            $.ajax({
+                type: "POST",
+                url: "/save_otp",
+                data: { user: sessio.get},
+                dataType: "json",
+                success: function (response) {
+                    
+                }
+            }); 
+
         });
         
         // Modal verify and delete handling
@@ -157,9 +169,29 @@
                     });
                 }, 15000);
             }
+            else{
+                $.ajax({
+                    type: "POST",
+                    url: "/otp_verification",
+                    data: { email_otp : email_otp_val},
+                    dataType: "json",
+                    success: function (resp) {
+                        
+                        
+                    }
+                });
+            }
 
 
+        });      
+            
+        $(document).on("keyup", ".email-otp", function () {            
+            if ($(this).val().length === 1) {
+                $(this).next(".email-otp").focus();
+            }
         });
+
+
     </script>
 </div>
 <style type="text/css">
@@ -209,7 +241,7 @@
       </div>
       <div class="modal-body border-0">
         <span>We have sent verification code on your verified email and phone</span>
-        <form method="post" id="accountDeleteForm">
+        <form method="post" id="accountDeleteForm" autocomplete="off">
             <div class="form-group mt-4">
                 <label for="emailOTPField">Email verification code</label>
                 <div id="emailOTP" class="inputs d-flex flex-row justify-content-center mt-2">
