@@ -249,7 +249,7 @@ def save_send_otp():
     conn_cursor.close()
     
     send_email(mailing_route, received_user, email_otp)
-    
+    return True
     
 
 @app.route('/otp_verification', methods=['POST'])
