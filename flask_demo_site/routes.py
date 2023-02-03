@@ -48,7 +48,6 @@ def send_email(mailing_route, email, data=""):
                       sender= 'demo_admin@demosite.com',
                       recipients=[email])
         msg.body = "Your OTP for account deletion is : "+ data
-        # msg.html = render_template('confirm_registration_email_template.html', link= link)
         mail.send(msg)
         
 
@@ -241,7 +240,7 @@ def save_send_otp():
     received_user = request.form.get("user_email")
     mailing_route = request.form.get("path")
     email_otp = generate_num_str(6)
-        
+    
     conn_cursor = mysql.connection.cursor()
     conn_cursor.execute("""INSERT INTO emailotp ( otp_code, otp_user ) 
                         VALUES (%s, %s)""", (email_otp, received_user))
@@ -249,19 +248,28 @@ def save_send_otp():
     conn_cursor.close()
     
     send_email(mailing_route, received_user, email_otp)
-    return True
+    return jsonify({'status': 'success'}), 200
     
-
+# User deleted after OTP is verified    
 @app.route('/otp_verification', methods=['POST'])
-def otp_verification():
-    received_email_otp = request.form.get("email_otp")
-    received_otp_user = request.form.get("user")
-    
+def otp_verification_and_delete():
+    received_eotp = request.form.get("email_otp")
+    received_otp_user = request.form.get("user")    
+        
     conn_cursor = mysql.connection.cursor()
     conn_cursor.execute("""SELECT otp_code
-                        FROM emailotp WHERE opt_user = '{}'""".format(received_otp_user))
-    result = conn_cursor.fetchone()
-    return result
+                        FROM emailotp WHERE otp_user = '{}'""".format(received_otp_user))
+    db_otp = conn_cursor.fetchone()
+    
+    if (received_eotp == db_otp[0]):
+        conn_cursor.execute("""DELETE FROM users WHERE email_address = '{}'""".format(received_otp_user,))
+        mysql.connection.commit()
+        conn_cursor.close()
+        session.clear()
+        return jsonify({'status': 'success'}), 200
+    else:
+        conn_cursor.close()
+        return jsonify({'status': 'failure'}), 200
 
 ###### User routes ######
 # @app.route('/users/<str:username>/profile')

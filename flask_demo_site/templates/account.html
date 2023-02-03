@@ -14,8 +14,10 @@
         
     </div>
     <script>
-        $(document).ready(function() {         
+        
+        var user_email = {{ session.get('email')|tojson|safe }};
 
+        $(document).ready(function() {         
             // AJAX to load first tab section on page load
             var firstTabId = $('.account-tab').first().attr('id');
             $(firstTabId).addClass("active");     
@@ -131,10 +133,9 @@
 
         // Shows confirmation modal and generate OTPs
         $(document).on("click", "#deleteAccount", function () {
-            var user_email = {{ session.get('email')|tojson|safe }};
             var path = window.location.pathname;
             $("#confirmationModal").modal("show");
-            
+
             $.ajax({
                 type: "POST",
                 url: "/send_otp",
@@ -143,7 +144,7 @@
                 },
                 dataType: "json",
                 success: function (response) {
-                    
+                   
                 }
             }); 
 
@@ -157,7 +158,8 @@
                 email_otp_val += $(this).val();
                 email_otp_len += 1;
             });
-           
+
+
             if (email_otp_len > email_otp_val.length){
                 $('.email-otp').css({
                         "border-color": "red", 
@@ -176,11 +178,18 @@
                 $.ajax({
                     type: "POST",
                     url: "/otp_verification",
-                    data: { email_otp : email_otp_val},
+                    data: { email_otp : email_otp_val,
+                        user : user_email
+                    },
                     dataType: "json",
                     success: function (resp) {
-                        
-                        
+                        if (resp.status == "success") {
+                            window.localStorage.removeItem('session');
+                            window.location.href = '/logout';
+                        } else {
+                            return false;
+                        }
+                    
                     }
                 });
             }
