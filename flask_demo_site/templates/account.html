@@ -131,14 +131,16 @@
 
         // Shows confirmation modal and generate OTPs
         $(document).on("click", "#deleteAccount", function () {
-            var user = {{ session.get('user')|tojson|safe }};
-            console.log(user);
+            var user_email = {{ session.get('email')|tojson|safe }};
+            var path = window.location.pathname;
             $("#confirmationModal").modal("show");
             
             $.ajax({
                 type: "POST",
                 url: "/send_otp",
-                data: { user: user},
+                data: { user_email: user_email,
+                    path: path
+                },
                 dataType: "json",
                 success: function (response) {
                     
@@ -213,21 +215,21 @@
         font-weight: 500;
     }
     .form-control, .dataTable-input {
-    display: block;
-    width: 100%;
-    padding: 0.875rem 1.125rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    line-height: 1;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #b5bfcc;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border-radius: 0.35rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
+        display: block;
+        width: 100%;
+        padding: 0.875rem 1.125rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        line-height: 1;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #b5bfcc;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-radius: 0.35rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
 
 </style>
 {% endblock content %}

@@ -32,7 +32,7 @@ def set_user_session(userid, username, user_first_name, user_last_name, user_ema
     session['lname'] = user_last_name
     session['email'] = user_email
 
-def send_email(mailing_route, email):    
+def send_email(mailing_route, email, data=""):    
     if mailing_route == "/register":
         token = serializer.dumps(email, salt="registration-confirmation")
         msg = Message("Demosite registration confirmation",
@@ -42,6 +42,15 @@ def send_email(mailing_route, email):
         link = url_for('registration_verification', token=token, _external=True)
         msg.html = render_template('confirm_registration_email_template.html', link= link)
         mail.send(msg)
+        
+    elif mailing_route == '/account':
+        msg = Message("Demosite Account Delete OTP",
+                      sender= 'demo_admin@demosite.com',
+                      recipients=[email])
+        msg.body = "Your OTP for account deletion is : "+ data
+        # msg.html = render_template('confirm_registration_email_template.html', link= link)
+        mail.send(msg)
+        
 
 # Decorator to redirect user to login if accessing protected routes
 def login_required(f):
@@ -229,18 +238,18 @@ def username_check():
 # Generate OTP, Save OTP to db and send to user email 
 @app.route('/send_otp', methods=['POST'])
 def save_send_otp():
-    received_user = request.form.get("user")
+    received_user = request.form.get("user_email")
+    mailing_route = request.form.get("path")
     email_otp = generate_num_str(6)
-    user = session.get('user')
-    print("RECEIVED USER: ", received_user)
-    print("RECEIVED USER: ", type(received_user))
-    print(type(email_otp))
-    
+        
     conn_cursor = mysql.connection.cursor()
     conn_cursor.execute("""INSERT INTO emailotp ( otp_code, otp_user ) 
-                        VALUES (%s, %s)""", (email_otp, user))
+                        VALUES (%s, %s)""", (email_otp, received_user))
     mysql.connection.commit()
     conn_cursor.close()
+    
+    send_email(mailing_route, received_user, email_otp)
+    
     
 
 @app.route('/otp_verification', methods=['POST'])
