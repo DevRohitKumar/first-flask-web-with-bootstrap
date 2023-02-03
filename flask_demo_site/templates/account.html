@@ -131,13 +131,14 @@
 
         // Shows confirmation modal and generate OTPs
         $(document).on("click", "#deleteAccount", function () {
+            var user = {{ session.get('user')|tojson|safe }};
+            console.log(user);
             $("#confirmationModal").modal("show");
-            var user =  session.get('user') 
-            // var userId = {{ session["user_id"]|tojson|safe }};
+            
             $.ajax({
                 type: "POST",
-                url: "/save_otp",
-                data: { user: sessio.get},
+                url: "/send_otp",
+                data: { user: user},
                 dataType: "json",
                 success: function (response) {
                     

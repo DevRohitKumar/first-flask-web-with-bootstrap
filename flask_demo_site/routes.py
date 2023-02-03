@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request, session, jsonify
+from flask import render_template, redirect, url_for, flash, request, session, jsonify, g
 from flask_demo_site import app, mysql, mail, serializer
 from flask_demo_site.forms import RegisterForm, LoginForm, VerifyEmailForm, ResetPasswordForm
 from flask_demo_site.helpers.random_alphanum_str import generate_aplhanum_str
@@ -227,17 +227,20 @@ def username_check():
         print(e)
 
 # Generate OTP, Save OTP to db and send to user email 
-@app.route('/save_otp', methods=['POST'])
-def save_otp_to_db():
+@app.route('/send_otp', methods=['POST'])
+def save_send_otp():
+    received_user = request.form.get("user")
     email_otp = generate_num_str(6)
     user = session.get('user')
+    print("RECEIVED USER: ", received_user)
+    print("RECEIVED USER: ", type(received_user))
     print(type(email_otp))
     
-    # conn_cursor = mysql.connection.cursor()
-    # conn_cursor.execute("""INSERT INTO emailotp ( otp_code, otp_user ) 
-    #                     VALUES (%d, %s)""", (email_otp, user))
-    # mysql.connection.commit()
-    # conn_cursor.close()
+    conn_cursor = mysql.connection.cursor()
+    conn_cursor.execute("""INSERT INTO emailotp ( otp_code, otp_user ) 
+                        VALUES (%s, %s)""", (email_otp, user))
+    mysql.connection.commit()
+    conn_cursor.close()
     
 
 @app.route('/otp_verification', methods=['POST'])
