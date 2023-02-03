@@ -2,6 +2,7 @@ from flask import render_template, redirect, url_for, flash, request, session, j
 from flask_demo_site import app, mysql, mail, serializer
 from flask_demo_site.forms import RegisterForm, LoginForm, VerifyEmailForm, ResetPasswordForm
 from flask_demo_site.helpers.random_alphanum_str import generate_aplhanum_str
+from flask_demo_site.helpers.random_num_str import generate_num_str
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import config
 from datetime import timedelta
@@ -224,6 +225,32 @@ def username_check():
             return jsonify({'status': 'same'}), 200
     except Exception as e:
         print(e)
+
+# Generate and save OTP
+@app.route('/save_otp', methods=['POST'])
+def save_otp_to_db():
+    email_otp = generate_num_str(6)
+    user = session.get('user')
+    print(type(email_otp))
+    
+    # conn_cursor = mysql.connection.cursor()
+    # conn_cursor.execute("""INSERT INTO emailotp ( otp_code, otp_user ) 
+    #                     VALUES (%d, %s)""", (email_otp, user))
+    # mysql.connection.commit()
+    # conn_cursor.close()
+    
+
+@app.route('/otp_verification', methods=['POST'])
+def otp_verification():
+    email_otp = ""
+    for i in range(1, 7):
+        email_otp += str(request.form.get(f"emailOTP{i}"))
+        
+    conn_cursor = mysql.connection.cursor()
+    conn_cursor.execute("""SELECT user_id, username, user_first_name, user_last_name 
+                        FROM emailotp WHERE email_address = '{}'""".format(email))
+    result = conn_cursor.fetchone()
+    return result
 
 ###### User routes ######
 # @app.route('/users/<str:username>/profile')

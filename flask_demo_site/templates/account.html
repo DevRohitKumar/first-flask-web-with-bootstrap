@@ -114,11 +114,7 @@
                         }
                     });
                 }
-
-            }
-            
-            
-
+            }   
         });         
 
         // Add date picker to birthday input field
@@ -133,11 +129,15 @@
             );
         });
 
+        // Shows confirmation modal
         $(document).on("click", "#deleteAccount", function () {
             $("#confirmationModal").modal("show");            
         });
         
-
+        // Modal verify and delete handling
+        $(document).on("click", "#accountDeleteModalBtn" , function (e) {
+            console.log("Hi there");
+        });
     </script>
 </div>
 <style type="text/css">
@@ -183,31 +183,31 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header border-0 justify-content-center ">
-        <h5 class="modal-title text-center " id="myModalLabel">Account delete confirmation</h5>
-        
+        <h5 class="modal-title text-center  " id="myModalLabel">Account delete confirmation</h5>
       </div>
       <div class="modal-body border-0">
+        <span>We have sent verification code on your verified email and phone</span>
         <form method="post" id="accountDeleteForm">
-            <div class="form-group">
+            <div class="form-group mt-4">
                 <label for="emailOTPField">Email verification code</label>
                 <div id="emailOTP" class="inputs d-flex flex-row justify-content-center mt-2">
-                    <input class="m-2 text-center form-control rounded" type="text" id="emailOTPfirst" maxlength="1" />
-                    <input class="m-2 text-center form-control rounded" type="text" id="emailOTPsecond" maxlength="1" />
-                    <input class="m-2 text-center form-control rounded" type="text" id="emailOTPthird" maxlength="1" />
-                    <input class="m-2 text-center form-control rounded" type="text" id="emailOTPfourth" maxlength="1" />
-                    <input class="m-2 text-center form-control rounded" type="text" id="emailOTPfifth" maxlength="1" />
-                    <input class="m-2 text-center form-control rounded" type="text" id="emailOTPsixth" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded" type="text" name="emailOTP1" id="emailOTP1" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded" type="text" name="emailOTP2" id="emailOTP2" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded" type="text" name="emailOTP3" id="emailOTP3" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded" type="text" name="emailOTP4" id="emailOTP4" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded" type="text" name="emailOTP5" id="emailOTP5" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded" type="text" name="emailOTP6" id="emailOTP6" maxlength="1" />
                 </div>                               
             </div>
             <div class="form-group mt-4">                
                 <label for="phoneOTPField">Phone verification code</label>
                 <div id="phoneOTP" class="inputs d-flex flex-row justify-content-center mt-2">
-                    <input class="m-2 text-center form-control rounded" type="text" id="phoneOTPfirst" maxlength="1" />
-                    <input class="m-2 text-center form-control rounded" type="text" id="phoneOTPsecond" maxlength="1" />
-                    <input class="m-2 text-center form-control rounded" type="text" id="phoneOTPthird" maxlength="1" />
-                    <input class="m-2 text-center form-control rounded" type="text" id="phoneOTPfourth" maxlength="1" />
-                    <input class="m-2 text-center form-control rounded" type="text" id="phoneOTPfifth" maxlength="1" />
-                    <input class="m-2 text-center form-control rounded" type="text" id="phoneOTPsixth" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded" type="text" name="phoneOTP1" id="phoneOTP1" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded" type="text" name="phoneOTP2" id="phoneOTP2" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded" type="text" name="phoneOTP3" id="phoneOTP3" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded" type="text" name="phoneOTP4" id="phoneOTP4" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded" type="text" name="phoneOTP5" id="phoneOTP5" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded" type="text" name="phoneOTP6" id="phoneOTP6" maxlength="1" />
                 </div>
             </div>            
         </form>
